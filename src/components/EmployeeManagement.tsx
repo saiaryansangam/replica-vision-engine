@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, Edit, Plus } from "lucide-react";
+import { MoreHorizontal, Edit, Plus } from "lucide-react";
 
 // Mock employee data
 const employees = [
@@ -268,7 +268,7 @@ export function EmployeeManagement() {
                         variant="ghost"
                         className="w-8 h-8 p-0 hover:bg-muted"
                       >
-                        <Eye className="w-4 h-4 text-muted-foreground" />
+                        <MoreHorizontal className="w-4 h-4 text-muted-foreground" />
                       </Button>
                       <Button
                         size="sm"
