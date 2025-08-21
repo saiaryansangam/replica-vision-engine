@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { 
   LayoutDashboard, 
   FileText, 
@@ -52,26 +53,39 @@ const more = [
 ];
 
 export function AppSidebar() {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
-    <Sidebar className="w-64 bg-qms-sidebar border-r border-qms-table-border">
+    <Sidebar 
+      className={cn(
+        "bg-qms-sidebar border-r border-qms-table-border transition-all duration-300 ease-in-out",
+        isHovered ? "w-64" : "w-16"
+      )}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       {/* Logo Section */}
-      <div className="p-6 border-b border-qms-table-border">
+      <div className="p-4 border-b border-qms-table-border">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-lg">Q</span>
+          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
+            <span className="text-white font-bold text-sm">Q</span>
           </div>
-          <div>
-            <h1 className="font-semibold text-primary text-lg">i-QMS</h1>
-            <p className="text-xs text-qms-sidebar-item">Quality Management</p>
-          </div>
+          {isHovered && (
+            <div className="transition-opacity duration-300">
+              <h1 className="font-semibold text-primary text-base">i-QMS</h1>
+              <p className="text-xs text-qms-sidebar-item">Quality Management</p>
+            </div>
+          )}
         </div>
       </div>
 
-      <SidebarContent className="px-4 py-6">
+      <SidebarContent className="px-2 py-6">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xs font-medium text-qms-sidebar-item mb-3 uppercase tracking-wider">
-            Core Modules
-          </SidebarGroupLabel>
+          {isHovered && (
+            <SidebarGroupLabel className="text-xs font-medium text-qms-sidebar-item mb-3 uppercase tracking-wider px-2 transition-opacity duration-300">
+              Core Modules
+            </SidebarGroupLabel>
+          )}
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
               {coreModules.map((item) => (
@@ -80,14 +94,16 @@ export function AppSidebar() {
                     <NavLink 
                       to={item.url}
                       className={({ isActive }) => cn(
-                        "flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-colors",
+                        "flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-all duration-200",
                         isActive 
-                          ? "bg-qms-sidebar-active text-white" 
+                          ? "bg-primary text-white font-semibold" 
                           : "text-qms-sidebar-item hover:bg-qms-sidebar-hover hover:text-primary"
                       )}
                     >
-                      <item.icon className="w-4 h-4" />
-                      <span>{item.title}</span>
+                      <item.icon className="w-4 h-4 flex-shrink-0" />
+                      {isHovered && (
+                        <span className="transition-opacity duration-300">{item.title}</span>
+                      )}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -97,9 +113,11 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <SidebarGroup className="mt-8">
-          <SidebarGroupLabel className="text-xs font-medium text-qms-sidebar-item mb-3 uppercase tracking-wider">
-            Administration
-          </SidebarGroupLabel>
+          {isHovered && (
+            <SidebarGroupLabel className="text-xs font-medium text-qms-sidebar-item mb-3 uppercase tracking-wider px-2 transition-opacity duration-300">
+              Administration
+            </SidebarGroupLabel>
+          )}
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
               {administration.map((item) => (
@@ -108,14 +126,16 @@ export function AppSidebar() {
                     <NavLink 
                       to={item.url}
                       className={({ isActive }) => cn(
-                        "flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-colors",
+                        "flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-all duration-200",
                         isActive 
-                          ? "bg-qms-sidebar-active text-white" 
+                          ? "bg-primary text-white font-semibold" 
                           : "text-qms-sidebar-item hover:bg-qms-sidebar-hover hover:text-primary"
                       )}
                     >
-                      <item.icon className="w-4 h-4" />
-                      <span>{item.title}</span>
+                      <item.icon className="w-4 h-4 flex-shrink-0" />
+                      {isHovered && (
+                        <span className="transition-opacity duration-300">{item.title}</span>
+                      )}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -125,9 +145,11 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <SidebarGroup className="mt-8">
-          <SidebarGroupLabel className="text-xs font-medium text-qms-sidebar-item mb-3 uppercase tracking-wider">
-            Analytics
-          </SidebarGroupLabel>
+          {isHovered && (
+            <SidebarGroupLabel className="text-xs font-medium text-qms-sidebar-item mb-3 uppercase tracking-wider px-2 transition-opacity duration-300">
+              Analytics
+            </SidebarGroupLabel>
+          )}
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
               {analytics.map((item) => (
@@ -136,14 +158,16 @@ export function AppSidebar() {
                     <NavLink 
                       to={item.url}
                       className={({ isActive }) => cn(
-                        "flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-colors",
+                        "flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-all duration-200",
                         isActive 
-                          ? "bg-qms-sidebar-active text-white" 
+                          ? "bg-primary text-white font-semibold" 
                           : "text-qms-sidebar-item hover:bg-qms-sidebar-hover hover:text-primary"
                       )}
                     >
-                      <item.icon className="w-4 h-4" />
-                      <span>{item.title}</span>
+                      <item.icon className="w-4 h-4 flex-shrink-0" />
+                      {isHovered && (
+                        <span className="transition-opacity duration-300">{item.title}</span>
+                      )}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -153,9 +177,11 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <SidebarGroup className="mt-8">
-          <SidebarGroupLabel className="text-xs font-medium text-qms-sidebar-item mb-3 uppercase tracking-wider">
-            More
-          </SidebarGroupLabel>
+          {isHovered && (
+            <SidebarGroupLabel className="text-xs font-medium text-qms-sidebar-item mb-3 uppercase tracking-wider px-2 transition-opacity duration-300">
+              More
+            </SidebarGroupLabel>
+          )}
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
               {more.map((item) => (
@@ -164,14 +190,16 @@ export function AppSidebar() {
                     <NavLink 
                       to={item.url}
                       className={({ isActive }) => cn(
-                        "flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-colors",
+                        "flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-all duration-200",
                         isActive 
-                          ? "bg-qms-sidebar-active text-white" 
+                          ? "bg-primary text-white font-semibold" 
                           : "text-qms-sidebar-item hover:bg-qms-sidebar-hover hover:text-primary"
                       )}
                     >
-                      <item.icon className="w-4 h-4" />
-                      <span>{item.title}</span>
+                      <item.icon className="w-4 h-4 flex-shrink-0" />
+                      {isHovered && (
+                        <span className="transition-opacity duration-300">{item.title}</span>
+                      )}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
