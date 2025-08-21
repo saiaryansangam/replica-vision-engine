@@ -7,6 +7,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { MoreHorizontal, Edit, Plus } from "lucide-react";
 
 // Mock employee data
@@ -80,11 +89,40 @@ export function EmployeeManagement() {
   const [roleFilter, setRoleFilter] = useState("all");
   const [departmentFilter, setDepartmentFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [isNewEmployeeModalOpen, setIsNewEmployeeModalOpen] = useState(false);
+  const [newEmployee, setNewEmployee] = useState({
+    name: "",
+    email: "",
+    contact: "",
+    role: "",
+    department: ""
+  });
 
   const resetFilters = () => {
     setRoleFilter("all");
     setDepartmentFilter("all"); 
     setStatusFilter("all");
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setNewEmployee(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleCreateEmployee = () => {
+    // Handle employee creation logic here
+    console.log("Creating employee:", newEmployee);
+    setIsNewEmployeeModalOpen(false);
+    // Reset form
+    setNewEmployee({
+      name: "",
+      email: "",
+      contact: "",
+      role: "",
+      department: ""
+    });
   };
 
   return (
@@ -98,7 +136,10 @@ export function EmployeeManagement() {
               {employees.length} Employees
             </div>
           </div>
-          <Button className="bg-primary hover:bg-primary-dark text-white">
+          <Button 
+            className="bg-primary hover:bg-primary-dark text-white"
+            onClick={() => setIsNewEmployeeModalOpen(true)}
+          >
             <Plus className="w-4 h-4 mr-2" />
             New Employee
           </Button>
@@ -201,6 +242,100 @@ export function EmployeeManagement() {
           </table>
         </div>
       </div>
+
+      {/* New Employee Modal */}
+      <Dialog open={isNewEmployeeModalOpen} onOpenChange={setIsNewEmployeeModalOpen}>
+        <DialogContent className="sm:max-w-[500px] bg-white">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-semibold text-primary">Add New Employee</DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              Create a new employee account. The employee will receive an email to confirm their account.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="name" className="text-sm font-medium text-foreground">Name</Label>
+                <Input
+                  id="name"
+                  value={newEmployee.name}
+                  onChange={(e) => handleInputChange("name", e.target.value)}
+                  className="bg-white border-border"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-sm font-medium text-foreground">Email.com</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={newEmployee.email}
+                  onChange={(e) => handleInputChange("email", e.target.value)}
+                  className="bg-white border-border"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="contact" className="text-sm font-medium text-foreground">Contact</Label>
+                <Input
+                  id="contact"
+                  value={newEmployee.contact}
+                  onChange={(e) => handleInputChange("contact", e.target.value)}
+                  className="bg-white border-border"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="role" className="text-sm font-medium text-foreground">Role</Label>
+                <Select value={newEmployee.role} onValueChange={(value) => handleInputChange("role", value)}>
+                  <SelectTrigger className="bg-white border-border">
+                    <SelectValue placeholder="Select role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="employee">Employee</SelectItem>
+                    <SelectItem value="manager">Manager</SelectItem>
+                    <SelectItem value="admin">Admin</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="department" className="text-sm font-medium text-foreground">Department</Label>
+                <Select value={newEmployee.department} onValueChange={(value) => handleInputChange("department", value)}>
+                  <SelectTrigger className="bg-white border-border">
+                    <SelectValue placeholder="Select department" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="production">Production</SelectItem>
+                    <SelectItem value="quality">Quality</SelectItem>
+                    <SelectItem value="hr">HR</SelectItem>
+                    <SelectItem value="finance">Finance</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-3 pt-4">
+            <Button
+              variant="outline"
+              onClick={() => setIsNewEmployeeModalOpen(false)}
+              className="border-border"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleCreateEmployee}
+              className="bg-primary hover:bg-primary-dark text-white"
+            >
+              Create Employee
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
