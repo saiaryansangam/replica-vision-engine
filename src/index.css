@@ -9,33 +9,44 @@ All colors MUST be HSL.
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 210 25% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 210 25% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 210 25% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* i-QMS mint green primary color */
+    --primary: 155 65% 65%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 155 50% 85%;
+    --primary-dark: 155 70% 50%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 210 15% 95%;
+    --secondary-foreground: 210 25% 25%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 210 15% 97%;
+    --muted-foreground: 210 15% 55%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 155 40% 92%;
+    --accent-foreground: 155 70% 25%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 210 20% 90%;
+    --input: 210 20% 95%;
+    --ring: 155 65% 65%;
 
+    /* Custom design tokens */
+    --sidebar-bg: 155 25% 90%;
+    --sidebar-item: 210 15% 45%;
+    --sidebar-item-hover: 155 30% 85%;
+    --sidebar-active: 155 65% 65%;
+    --table-header: 155 40% 92%;
+    --table-border: 210 20% 88%;
+    
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;

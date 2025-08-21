@@ -1,7 +1,7 @@
 import { EmployeeManagement } from "@/components/EmployeeManagement";
 
-const Index = () => {
+const EmployeesPage = () => {
   return <EmployeeManagement />;
 };
 
-export default Index;
+export default EmployeesPage;

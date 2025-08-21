@@ -26,7 +26,9 @@ export default {
 				foreground: 'hsl(var(--foreground))',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					foreground: 'hsl(var(--primary-foreground))',
+					light: 'hsl(var(--primary-light))',
+					dark: 'hsl(var(--primary-dark))'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
@@ -52,6 +54,13 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				// i-QMS custom colors
+				'qms-sidebar': 'hsl(var(--sidebar-bg))',
+				'qms-sidebar-item': 'hsl(var(--sidebar-item))',
+				'qms-sidebar-hover': 'hsl(var(--sidebar-item-hover))',
+				'qms-sidebar-active': 'hsl(var(--sidebar-active))',
+				'qms-table-header': 'hsl(var(--table-header))',
+				'qms-table-border': 'hsl(var(--table-border))',
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
