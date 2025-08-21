@@ -90,7 +90,16 @@ export function EmployeeManagement() {
   const [departmentFilter, setDepartmentFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [isNewEmployeeModalOpen, setIsNewEmployeeModalOpen] = useState(false);
+  const [isEditEmployeeModalOpen, setIsEditEmployeeModalOpen] = useState(false);
   const [newEmployee, setNewEmployee] = useState({
+    name: "",
+    email: "",
+    contact: "",
+    role: "",
+    department: ""
+  });
+  const [editingEmployee, setEditingEmployee] = useState({
+    id: "",
     name: "",
     email: "",
     contact: "",
@@ -111,12 +120,46 @@ export function EmployeeManagement() {
     }));
   };
 
+  const handleEditInputChange = (field: string, value: string) => {
+    setEditingEmployee(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleEditEmployee = (employee: any) => {
+    setEditingEmployee({
+      id: employee.id,
+      name: employee.name,
+      email: employee.email,
+      contact: "", // This would come from employee data if available
+      role: employee.role,
+      department: employee.department
+    });
+    setIsEditEmployeeModalOpen(true);
+  };
+
   const handleCreateEmployee = () => {
     // Handle employee creation logic here
     console.log("Creating employee:", newEmployee);
     setIsNewEmployeeModalOpen(false);
     // Reset form
     setNewEmployee({
+      name: "",
+      email: "",
+      contact: "",
+      role: "",
+      department: ""
+    });
+  };
+
+  const handleUpdateEmployee = () => {
+    // Handle employee update logic here
+    console.log("Updating employee:", editingEmployee);
+    setIsEditEmployeeModalOpen(false);
+    // Reset form
+    setEditingEmployee({
+      id: "",
       name: "",
       email: "",
       contact: "",
@@ -231,6 +274,7 @@ export function EmployeeManagement() {
                         size="sm"
                         variant="ghost"
                         className="w-8 h-8 p-0 hover:bg-muted"
+                        onClick={() => handleEditEmployee(employee)}
                       >
                         <Edit className="w-4 h-4 text-muted-foreground" />
                       </Button>
@@ -332,6 +376,100 @@ export function EmployeeManagement() {
               className="bg-primary hover:bg-primary-dark text-white"
             >
               Create Employee
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Employee Modal */}
+      <Dialog open={isEditEmployeeModalOpen} onOpenChange={setIsEditEmployeeModalOpen}>
+        <DialogContent className="sm:max-w-[500px] bg-white">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-semibold text-primary">Edit Employee</DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              Update Employee Details
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="edit-name" className="text-sm font-medium text-foreground">Name</Label>
+                <Input
+                  id="edit-name"
+                  value={editingEmployee.name}
+                  onChange={(e) => handleEditInputChange("name", e.target.value)}
+                  className="bg-white border-border"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-email" className="text-sm font-medium text-foreground">Email.com</Label>
+                <Input
+                  id="edit-email"
+                  type="email"
+                  value={editingEmployee.email}
+                  onChange={(e) => handleEditInputChange("email", e.target.value)}
+                  className="bg-white border-border"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="edit-contact" className="text-sm font-medium text-foreground">Contact</Label>
+                <Input
+                  id="edit-contact"
+                  value={editingEmployee.contact}
+                  onChange={(e) => handleEditInputChange("contact", e.target.value)}
+                  className="bg-white border-border"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-role" className="text-sm font-medium text-foreground">Role</Label>
+                <Select value={editingEmployee.role} onValueChange={(value) => handleEditInputChange("role", value)}>
+                  <SelectTrigger className="bg-white border-border">
+                    <SelectValue placeholder="Select role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="employee">Employee</SelectItem>
+                    <SelectItem value="manager">Manager</SelectItem>
+                    <SelectItem value="admin">Admin</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="edit-department" className="text-sm font-medium text-foreground">Department</Label>
+                <Select value={editingEmployee.department} onValueChange={(value) => handleEditInputChange("department", value)}>
+                  <SelectTrigger className="bg-white border-border">
+                    <SelectValue placeholder="Select department" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="production">Production</SelectItem>
+                    <SelectItem value="quality">Quality</SelectItem>
+                    <SelectItem value="hr">HR</SelectItem>
+                    <SelectItem value="finance">Finance</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-3 pt-4">
+            <Button
+              variant="outline"
+              onClick={() => setIsEditEmployeeModalOpen(false)}
+              className="border-border"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleUpdateEmployee}
+              className="bg-primary hover:bg-primary-dark text-white"
+            >
+              Update Employee
             </Button>
           </div>
         </DialogContent>
