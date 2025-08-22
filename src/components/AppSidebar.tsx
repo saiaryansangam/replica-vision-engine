@@ -58,23 +58,22 @@ export function AppSidebar() {
   return (
     <Sidebar 
       className={cn(
-        "border-r border-qms-table-border transition-all duration-300 ease-in-out",
-        "bg-gradient-to-r from-[hsl(155_70%_45%)] to-[hsl(155_60%_60%)]",
+        "bg-qms-sidebar border-r border-qms-table-border transition-all duration-300 ease-in-out",
         isHovered ? "w-64" : "w-16"
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Logo Section */}
-      <div className="p-4 border-b border-white/20">
+      <div className="p-4 border-b border-qms-table-border">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
-            <span className="text-primary font-bold text-sm">Q</span>
+          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
+            <span className="text-white font-bold text-sm">Q</span>
           </div>
           {isHovered && (
             <div className="transition-opacity duration-300">
-              <h1 className="font-semibold text-white text-base">i-QMS</h1>
-              <p className="text-xs text-white/80">Quality Management</p>
+              <h1 className="font-semibold text-primary text-base">i-QMS</h1>
+              <p className="text-xs text-qms-sidebar-item">Quality Management</p>
             </div>
           )}
         </div>
@@ -83,7 +82,7 @@ export function AppSidebar() {
       <SidebarContent className="px-2 py-6">
         <SidebarGroup>
           {isHovered && (
-            <SidebarGroupLabel className="text-xs font-medium text-white/80 mb-3 uppercase tracking-wider px-2 transition-opacity duration-300">
+            <SidebarGroupLabel className="text-xs font-medium text-qms-sidebar-item mb-3 uppercase tracking-wider px-2 transition-opacity duration-300">
               Core Modules
             </SidebarGroupLabel>
           )}
@@ -97,8 +96,8 @@ export function AppSidebar() {
                       className={({ isActive }) => cn(
                         "flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-all duration-200",
                         isActive 
-                          ? "bg-white text-primary font-semibold" 
-                          : "text-white/90 hover:bg-white/10 hover:text-white"
+                          ? "bg-primary text-white font-semibold" 
+                          : "text-qms-sidebar-item hover:bg-qms-sidebar-hover hover:text-primary"
                       )}
                     >
                       <item.icon className="w-4 h-4 flex-shrink-0" />
@@ -115,7 +114,7 @@ export function AppSidebar() {
 
         <SidebarGroup className="mt-8">
           {isHovered && (
-            <SidebarGroupLabel className="text-xs font-medium text-white/80 mb-3 uppercase tracking-wider px-2 transition-opacity duration-300">
+            <SidebarGroupLabel className="text-xs font-medium text-qms-sidebar-item mb-3 uppercase tracking-wider px-2 transition-opacity duration-300">
               Administration
             </SidebarGroupLabel>
           )}
@@ -129,8 +128,8 @@ export function AppSidebar() {
                       className={({ isActive }) => cn(
                         "flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-all duration-200",
                         isActive 
-                          ? "bg-white text-primary font-semibold" 
-                          : "text-white/90 hover:bg-white/10 hover:text-white"
+                          ? "bg-primary text-white font-semibold" 
+                          : "text-qms-sidebar-item hover:bg-qms-sidebar-hover hover:text-primary"
                       )}
                     >
                       <item.icon className="w-4 h-4 flex-shrink-0" />
@@ -147,7 +146,7 @@ export function AppSidebar() {
 
         <SidebarGroup className="mt-8">
           {isHovered && (
-            <SidebarGroupLabel className="text-xs font-medium text-white/80 mb-3 uppercase tracking-wider px-2 transition-opacity duration-300">
+            <SidebarGroupLabel className="text-xs font-medium text-qms-sidebar-item mb-3 uppercase tracking-wider px-2 transition-opacity duration-300">
               Analytics
             </SidebarGroupLabel>
           )}
@@ -161,8 +160,8 @@ export function AppSidebar() {
                       className={({ isActive }) => cn(
                         "flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-all duration-200",
                         isActive 
-                          ? "bg-white text-primary font-semibold" 
-                          : "text-white/90 hover:bg-white/10 hover:text-white"
+                          ? "bg-primary text-white font-semibold" 
+                          : "text-qms-sidebar-item hover:bg-qms-sidebar-hover hover:text-primary"
                       )}
                     >
                       <item.icon className="w-4 h-4 flex-shrink-0" />
@@ -179,7 +178,7 @@ export function AppSidebar() {
 
         <SidebarGroup className="mt-8">
           {isHovered && (
-            <SidebarGroupLabel className="text-xs font-medium text-white/80 mb-3 uppercase tracking-wider px-2 transition-opacity duration-300">
+            <SidebarGroupLabel className="text-xs font-medium text-qms-sidebar-item mb-3 uppercase tracking-wider px-2 transition-opacity duration-300">
               More
             </SidebarGroupLabel>
           )}
@@ -193,8 +192,8 @@ export function AppSidebar() {
                       className={({ isActive }) => cn(
                         "flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-all duration-200",
                         isActive 
-                          ? "bg-white text-primary font-semibold" 
-                          : "text-white/90 hover:bg-white/10 hover:text-white"
+                          ? "bg-primary text-white font-semibold" 
+                          : "text-qms-sidebar-item hover:bg-qms-sidebar-hover hover:text-primary"
                       )}
                     >
                       <item.icon className="w-4 h-4 flex-shrink-0" />
