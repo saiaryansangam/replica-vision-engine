@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { MoreHorizontal, Edit, Plus } from "lucide-react";
+import { MoreHorizontal, Edit, Plus, User, Mail, Phone, Building, UserCheck } from "lucide-react";
 
 // Mock employee data
 const employees = [
@@ -25,63 +25,72 @@ const employees = [
     name: "Jhon",
     role: "Employee",
     department: "Production",
-    email: "Jhon@gmail.com"
+    email: "Jhon@gmail.com",
+    contact: "987654321"
   },
   {
     id: "123456789",
     name: "Jhon",
     role: "Employee", 
     department: "Production",
-    email: "Jhon@gmail.com"
+    email: "Jhon@gmail.com",
+    contact: "987654321"
   },
   {
     id: "123456789",
     name: "Jhon",
     role: "Employee",
     department: "Production", 
-    email: "Jhon@gmail.com"
+    email: "Jhon@gmail.com",
+    contact: "987654321"
   },
   {
     id: "123456789",
     name: "Jhon",
     role: "Employee",
     department: "Production",
-    email: "Jhon@gmail.com"
+    email: "Jhon@gmail.com",
+    contact: "987654321"
   },
   {
     id: "123456789",
     name: "Jhon",
     role: "Employee",
     department: "Production",
-    email: "Jhon@gmail.com"
+    email: "Jhon@gmail.com",
+    contact: "987654321"
   },
   {
     id: "123456789",
     name: "Jhon",
     role: "Employee",
     department: "Production",
-    email: "Jhon@gmail.com"
+    email: "Jhon@gmail.com",
+    contact: "987654321"
   },
   {
     id: "123456789",
     name: "Jhon",
     role: "Employee",
     department: "Production",
-    email: "Jhon@gmail.com"
+    email: "Jhon@gmail.com",
+    contact: "987654321"
   },
   {
     id: "123456789",
     name: "Jhon",
     role: "Employee",
     department: "Production",
-    email: "Jhon@gmail.com"
+    email: "Jhon@gmail.com",
+    contact: "987654321"
   },
   {
     id: "123456789",
     name: "Jhon",
     role: "Employee",
     department: "Production",
-    email: "Jhon@gmail.com"
+    email: "Jhon@gmail.com",
+    contact: "987654321"
   }
 ];
 
@@ -91,6 +100,15 @@ export function EmployeeManagement() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [isNewEmployeeModalOpen, setIsNewEmployeeModalOpen] = useState(false);
   const [isEditEmployeeModalOpen, setIsEditEmployeeModalOpen] = useState(false);
+  const [isViewEmployeeModalOpen, setIsViewEmployeeModalOpen] = useState(false);
+  const [viewingEmployee, setViewingEmployee] = useState({
+    id: "",
+    name: "",
+    email: "",
+    contact: "",
+    role: "",
+    department: ""
+  });
   const [newEmployee, setNewEmployee] = useState({
     name: "",
     email: "",
@@ -127,12 +145,24 @@ export function EmployeeManagement() {
     }));
   };
 
+  const handleViewEmployee = (employee: any) => {
+    setViewingEmployee({
+      id: employee.id,
+      name: employee.name,
+      email: employee.email,
+      contact: employee.contact,
+      role: employee.role,
+      department: employee.department
+    });
+    setIsViewEmployeeModalOpen(true);
+  };
+
   const handleEditEmployee = (employee: any) => {
     setEditingEmployee({
       id: employee.id,
       name: employee.name,
       email: employee.email,
-      contact: "", // This would come from employee data if available
+      contact: employee.contact,
       role: employee.role,
       department: employee.department
     });
@@ -267,6 +297,7 @@ export function EmployeeManagement() {
                         size="sm"
                         variant="ghost"
                         className="w-8 h-8 p-0 hover:bg-muted"
+                        onClick={() => handleViewEmployee(employee)}
                       >
                         <MoreHorizontal className="w-4 h-4 text-muted-foreground" />
                       </Button>
@@ -471,6 +502,59 @@ export function EmployeeManagement() {
             >
               Update Employee
             </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* View Employee Modal */}
+      <Dialog open={isViewEmployeeModalOpen} onOpenChange={setIsViewEmployeeModalOpen}>
+        <DialogContent className="sm:max-w-[400px] bg-white">
+          <div className="flex flex-col items-center space-y-6 py-6">
+            {/* User Avatar */}
+            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center">
+              <User className="w-8 h-8 text-muted-foreground" />
+            </div>
+            
+            {/* Employee Name */}
+            <div className="text-center">
+              <h2 className="text-xl font-semibold text-foreground">{viewingEmployee.name}</h2>
+              <p className="text-sm text-muted-foreground mt-1">Employee ID : {viewingEmployee.id}</p>
+            </div>
+
+            {/* Employee Details */}
+            <div className="w-full space-y-4">
+              <div className="flex items-center gap-3 py-2">
+                <Mail className="w-5 h-5 text-primary" />
+                <div>
+                  <p className="text-sm font-medium text-foreground">Email :</p>
+                  <p className="text-sm text-primary">{viewingEmployee.email}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 py-2">
+                <Phone className="w-5 h-5 text-primary" />
+                <div>
+                  <p className="text-sm font-medium text-foreground">Contact :</p>
+                  <p className="text-sm text-foreground">{viewingEmployee.contact}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 py-2">
+                <Building className="w-5 h-5 text-primary" />
+                <div>
+                  <p className="text-sm font-medium text-foreground">Department :</p>
+                  <p className="text-sm text-foreground">{viewingEmployee.department}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 py-2">
+                <UserCheck className="w-5 h-5 text-primary" />
+                <div>
+                  <p className="text-sm font-medium text-foreground">Role :</p>
+                  <p className="text-sm text-foreground">{viewingEmployee.role}</p>
+                </div>
+              </div>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
