@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { 
   Select,
   SelectContent,
@@ -8,6 +10,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { 
   FileText, 
@@ -18,7 +26,9 @@ import {
   Trash2, 
   RefreshCw,
   Clock,
-  CheckCircle
+  CheckCircle,
+  X,
+  CalendarIcon
 } from "lucide-react";
 
 // Mock document data
@@ -130,6 +140,45 @@ export function DocumentManagement() {
   const [departmentFilter, setDepartmentFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [isNewDocumentModalOpen, setIsNewDocumentModalOpen] = useState(false);
+  const [newDocument, setNewDocument] = useState({
+    title: "",
+    type: "",
+    department: "",
+    content: "",
+    effectiveDate: "",
+    reviewDueDate: "",
+    expiryDate: "",
+    file: null as File | null
+  });
+
+  const handleInputChange = (field: string, value: string | File | null) => {
+    setNewDocument(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleCreateDocument = () => {
+    console.log("Creating document:", newDocument);
+    setIsNewDocumentModalOpen(false);
+    // Reset form
+    setNewDocument({
+      title: "",
+      type: "",
+      department: "",
+      content: "",
+      effectiveDate: "",
+      reviewDueDate: "",
+      expiryDate: "",
+      file: null
+    });
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] || null;
+    handleInputChange("file", file);
+  };
 
   return (
     <div className="flex-1 bg-background">
@@ -142,6 +191,7 @@ export function DocumentManagement() {
           </div>
           <Button 
             className="bg-primary hover:bg-primary-dark text-white"
+            onClick={() => setIsNewDocumentModalOpen(true)}
           >
             <Plus className="w-4 h-4 mr-2" />
             New Document
@@ -306,6 +356,167 @@ export function DocumentManagement() {
           </table>
         </div>
       </div>
+
+      {/* Create New Document Modal */}
+      <Dialog open={isNewDocumentModalOpen} onOpenChange={setIsNewDocumentModalOpen}>
+        <DialogContent className="sm:max-w-[600px] bg-white max-h-[90vh] overflow-y-auto">
+          <DialogHeader className="relative">
+            <DialogTitle className="text-xl font-semibold text-primary pr-8">Create New Document</DialogTitle>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="absolute right-0 top-0 w-6 h-6 p-0 hover:bg-muted"
+              onClick={() => setIsNewDocumentModalOpen(false)}
+            >
+              <X className="w-4 h-4" />
+            </Button>
+          </DialogHeader>
+          
+          <div className="space-y-6 py-4">
+            {/* Title */}
+            <div className="space-y-2">
+              <Label htmlFor="title" className="text-sm font-medium text-foreground">
+                Title <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="title"
+                placeholder="Document title"
+                value={newDocument.title}
+                onChange={(e) => handleInputChange("title", e.target.value)}
+                className="bg-white border-border"
+              />
+            </div>
+
+            {/* Type and Department */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="type" className="text-sm font-medium text-foreground">
+                  Type <span className="text-red-500">*</span>
+                </Label>
+                <Select value={newDocument.type} onValueChange={(value) => handleInputChange("type", value)}>
+                  <SelectTrigger className="bg-white border-border">
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border-border z-50">
+                    <SelectItem value="policy">Policy</SelectItem>
+                    <SelectItem value="sop">SOP</SelectItem>
+                    <SelectItem value="procedure">Procedure</SelectItem>
+                    <SelectItem value="form">Form</SelectItem>
+                    <SelectItem value="manual">Manual</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="department" className="text-sm font-medium text-foreground">
+                  Department <span className="text-red-500">*</span>
+                </Label>
+                <Select value={newDocument.department} onValueChange={(value) => handleInputChange("department", value)}>
+                  <SelectTrigger className="bg-white border-border">
+                    <SelectValue placeholder="Select department" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border-border z-50">
+                    <SelectItem value="production">Production</SelectItem>
+                    <SelectItem value="research">Research & Development</SelectItem>
+                    <SelectItem value="quality">Quality</SelectItem>
+                    <SelectItem value="hr">HR</SelectItem>
+                    <SelectItem value="finance">Finance</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="space-y-2">
+              <Label htmlFor="content" className="text-sm font-medium text-foreground">Content</Label>
+              <Textarea
+                id="content"
+                placeholder="Document content or description"
+                value={newDocument.content}
+                onChange={(e) => handleInputChange("content", e.target.value)}
+                className="bg-white border-border min-h-[100px] resize-none"
+              />
+            </div>
+
+            {/* Date Fields */}
+            <div className="grid grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="effectiveDate" className="text-sm font-medium text-foreground">Effective Date</Label>
+                <div className="relative">
+                  <Input
+                    id="effectiveDate"
+                    type="date"
+                    value={newDocument.effectiveDate}
+                    onChange={(e) => handleInputChange("effectiveDate", e.target.value)}
+                    className="bg-white border-border"
+                  />
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="reviewDueDate" className="text-sm font-medium text-foreground">Review Due Date</Label>
+                <div className="relative">
+                  <Input
+                    id="reviewDueDate"
+                    type="date"
+                    value={newDocument.reviewDueDate}
+                    onChange={(e) => handleInputChange("reviewDueDate", e.target.value)}
+                    className="bg-white border-border"
+                  />
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="expiryDate" className="text-sm font-medium text-foreground">Expiry Date</Label>
+                <div className="relative">
+                  <Input
+                    id="expiryDate"
+                    type="date"
+                    value={newDocument.expiryDate}
+                    onChange={(e) => handleInputChange("expiryDate", e.target.value)}
+                    className="bg-white border-border"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Upload File */}
+            <div className="space-y-2">
+              <Label htmlFor="file" className="text-sm font-medium text-foreground">Upload File</Label>
+              <div className="relative">
+                <Input
+                  id="file"
+                  type="file"
+                  onChange={handleFileChange}
+                  className="bg-white border-border file:bg-gray-100 file:border-0 file:mr-4 file:py-2 file:px-4 file:rounded file:text-sm file:font-medium file:text-gray-700 hover:file:bg-gray-200"
+                />
+                {!newDocument.file && (
+                  <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
+                    No file chosen
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex justify-end gap-3 pt-6 border-t border-border">
+            <Button
+              variant="outline"
+              onClick={() => setIsNewDocumentModalOpen(false)}
+              className="border-border text-muted-foreground hover:text-foreground"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleCreateDocument}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              Create Document
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
