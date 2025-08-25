@@ -1,11 +1,20 @@
 import { useState } from "react";
+import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { BookOpen, CheckCircle, Users, Grid3X3, Search, MoreHorizontal, Link } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { BookOpen, CheckCircle, Users, Grid3X3, Search, MoreHorizontal, Link, CalendarIcon, FileText, Video } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface TrainingProgram {
   id: string;
@@ -62,6 +71,20 @@ const mockTrainingData: TrainingProgram[] = [
 export function TrainingManagement() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("training-programs");
+  const [isNewTrainingOpen, setIsNewTrainingOpen] = useState(false);
+  const [startDate, setStartDate] = useState<Date>();
+  const [endDate, setEndDate] = useState<Date>();
+  const [contentType, setContentType] = useState("document");
+  const [mandatoryTraining, setMandatoryTraining] = useState(false);
+  const [formData, setFormData] = useState({
+    courseTitle: "",
+    courseCode: "",
+    description: "",
+    trainer: "",
+    duration: "",
+    passingScore: "",
+    approvedDocument: ""
+  });
 
   const filteredTraining = mockTrainingData.filter((training) =>
     training.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -81,7 +104,10 @@ export function TrainingManagement() {
             <p className="text-sm text-muted-foreground">Manage and track employee training programs</p>
           </div>
         </div>
-        <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">
+        <Button 
+          className="bg-emerald-600 hover:bg-emerald-700 text-white"
+          onClick={() => setIsNewTrainingOpen(true)}
+        >
           New Training
         </Button>
       </div>
@@ -263,6 +289,214 @@ export function TrainingManagement() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* New Training Modal */}
+      <Dialog open={isNewTrainingOpen} onOpenChange={setIsNewTrainingOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-semibold">Create New Training Course</DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-6 py-4">
+            {/* Course Title and Code */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="courseTitle">Course Title *</Label>
+                <Input
+                  id="courseTitle"
+                  value={formData.courseTitle}
+                  onChange={(e) => setFormData({...formData, courseTitle: e.target.value})}
+                  className="bg-white"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="courseCode">Course Code *</Label>
+                <Input
+                  id="courseCode"
+                  value={formData.courseCode}
+                  onChange={(e) => setFormData({...formData, courseCode: e.target.value})}
+                  className="bg-white"
+                />
+              </div>
+            </div>
+
+            {/* Description */}
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                value={formData.description}
+                onChange={(e) => setFormData({...formData, description: e.target.value})}
+                className="bg-white min-h-[80px]"
+              />
+            </div>
+
+            {/* Trainer, Duration, Passing Score */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="trainer">Trainer</Label>
+                <Input
+                  id="trainer"
+                  placeholder="Trainer name"
+                  value={formData.trainer}
+                  onChange={(e) => setFormData({...formData, trainer: e.target.value})}
+                  className="bg-white"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="duration">Duration (Hours)</Label>
+                <Input
+                  id="duration"
+                  type="number"
+                  placeholder="8"
+                  value={formData.duration}
+                  onChange={(e) => setFormData({...formData, duration: e.target.value})}
+                  className="bg-white"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="passingScore">Passing Score (%)</Label>
+                <Input
+                  id="passingScore"
+                  type="number"
+                  placeholder="80"
+                  value={formData.passingScore}
+                  onChange={(e) => setFormData({...formData, passingScore: e.target.value})}
+                  className="bg-white"
+                />
+              </div>
+            </div>
+
+            {/* Start Date and End Date */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Start Date</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal bg-white",
+                        !startDate && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {startDate ? format(startDate, "MM/dd/yyyy") : <span>mm/dd/yyyy</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={startDate}
+                      onSelect={setStartDate}
+                      initialFocus
+                      className="p-3 pointer-events-auto"
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <div className="space-y-2">
+                <Label>End Date</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal bg-white",
+                        !endDate && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {endDate ? format(endDate, "MM/dd/yyyy") : <span>mm/dd/yyyy</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={endDate}
+                      onSelect={setEndDate}
+                      initialFocus
+                      className="p-3 pointer-events-auto"
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </div>
+
+            {/* Content Type */}
+            <div className="space-y-3">
+              <Label>Content Type</Label>
+              <RadioGroup value={contentType} onValueChange={setContentType} className="flex gap-6">
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="document" id="document" />
+                  <Label htmlFor="document" className="flex items-center gap-2 cursor-pointer">
+                    <FileText className="w-4 h-4" />
+                    Document
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="video" id="video" />
+                  <Label htmlFor="video" className="flex items-center gap-2 cursor-pointer">
+                    <Video className="w-4 h-4" />
+                    Video
+                  </Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            {/* Select Approved Document */}
+            <div className="space-y-2">
+              <Label>Select Approved Document</Label>
+              <Select value={formData.approvedDocument} onValueChange={(value) => setFormData({...formData, approvedDocument: value})}>
+                <SelectTrigger className="bg-white">
+                  <SelectValue placeholder="Choose a document..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="document1">Document 1</SelectItem>
+                  <SelectItem value="document2">Document 2</SelectItem>
+                  <SelectItem value="document3">Document 3</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Mandatory Training */}
+            <div className="flex items-center space-x-2">
+              <Checkbox 
+                id="mandatory" 
+                checked={mandatoryTraining}
+                onCheckedChange={(checked) => setMandatoryTraining(checked === true)}
+              />
+              <Label htmlFor="mandatory">Mandatory Training</Label>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-3 pt-4">
+              <Button
+                variant="outline"
+                onClick={() => setIsNewTrainingOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                onClick={() => {
+                  // Handle form submission here
+                  console.log('Creating training course:', {
+                    ...formData,
+                    startDate,
+                    endDate,
+                    contentType,
+                    mandatoryTraining
+                  });
+                  setIsNewTrainingOpen(false);
+                }}
+              >
+                Create Course
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
