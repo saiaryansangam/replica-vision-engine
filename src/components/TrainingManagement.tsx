@@ -13,8 +13,10 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { BookOpen, CheckCircle, Users, Grid3X3, Search, MoreHorizontal, Link, CalendarIcon, FileText, Video } from "lucide-react";
+import { BookOpen, CheckCircle, Users, Grid3X3, Search, MoreHorizontal, Link, CalendarIcon, FileText, Video, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 
 interface TrainingProgram {
   id: string;
@@ -72,6 +74,8 @@ export function TrainingManagement() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("training-programs");
   const [isNewTrainingOpen, setIsNewTrainingOpen] = useState(false);
+  const [isViewTrainingOpen, setIsViewTrainingOpen] = useState(false);
+  const [selectedTraining, setSelectedTraining] = useState<TrainingProgram | null>(null);
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
   const [contentType, setContentType] = useState("document");
@@ -257,7 +261,15 @@ export function TrainingManagement() {
                       <TableCell className="py-4 text-muted-foreground">{training.trainee}</TableCell>
                       <TableCell className="py-4">
                         <div className="flex items-center gap-2">
-                          <Button variant="ghost" size="icon" className="w-8 h-8">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="w-8 h-8"
+                            onClick={() => {
+                              setSelectedTraining(training);
+                              setIsViewTrainingOpen(true);
+                            }}
+                          >
                             <MoreHorizontal className="w-4 h-4" />
                           </Button>
                           <Button variant="ghost" size="icon" className="w-8 h-8">
@@ -495,6 +507,109 @@ export function TrainingManagement() {
               </Button>
             </div>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* View Training Details Modal */}
+      <Dialog open={isViewTrainingOpen} onOpenChange={setIsViewTrainingOpen}>
+        <DialogContent className="max-w-lg">
+          {selectedTraining && (
+            <>
+              {/* Training Header with Badge */}
+              <div className="space-y-4 py-4">
+                <div className="flex items-center gap-3 pb-4 border-b">
+                  <div className="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center">
+                    <span className="text-white font-medium">
+                      {selectedTraining.title.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <h2 className="text-lg font-semibold">{selectedTraining.title}</h2>
+                      <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100">
+                        Active
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      other Training • {selectedTraining.duration}ours
+                    </p>
+                  </div>
+                </div>
+
+                {/* Form Fields */}
+                <div className="space-y-4">
+                  {/* Department and Duration Row */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="flex items-center gap-2">
+                        <Grid3X3 className="w-4 h-4" />
+                        Department
+                      </Label>
+                      <Input 
+                        value="Finance" 
+                        readOnly 
+                        className="bg-muted text-muted-foreground"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="flex items-center gap-2">
+                        <Clock className="w-4 h-4" />
+                        Duration
+                      </Label>
+                      <Input 
+                        value="1hr" 
+                        readOnly 
+                        className="bg-muted text-muted-foreground"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Scheduled Date */}
+                  <div className="space-y-2">
+                    <Label className="flex items-center gap-2">
+                      <CalendarIcon className="w-4 h-4" />
+                      Scheduled
+                    </Label>
+                    <Input 
+                      value="7-17-25" 
+                      readOnly 
+                      className="bg-muted text-muted-foreground"
+                    />
+                  </div>
+
+                  {/* Status */}
+                  <div className="space-y-2">
+                    <Label>Status</Label>
+                    <div className="space-y-2">
+                      <Progress value={0} className="w-full" />
+                      <div className="text-right text-sm text-muted-foreground">0%</div>
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  <div className="space-y-2">
+                    <Label>Description</Label>
+                    <Textarea 
+                      placeholder=""
+                      readOnly
+                      className="bg-muted text-muted-foreground min-h-[80px] resize-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Close Button */}
+                <div className="flex justify-center pt-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsViewTrainingOpen(false)}
+                    className="px-8"
+                  >
+                    Close
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
         </DialogContent>
       </Dialog>
     </div>
