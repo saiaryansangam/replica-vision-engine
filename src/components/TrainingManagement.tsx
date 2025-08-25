@@ -13,7 +13,20 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { BookOpen, CheckCircle, Users, Grid3X3, Search, MoreHorizontal, Edit, CalendarIcon, FileText, Video, Clock, Upload } from "lucide-react";
+import { 
+  BookOpen, 
+  CheckCircle, 
+  Users, 
+  Grid3X3, 
+  Search, 
+  MoreHorizontal, 
+  Edit, 
+  CalendarIcon, 
+  FileText, 
+  Video, 
+  Clock, 
+  Upload 
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
