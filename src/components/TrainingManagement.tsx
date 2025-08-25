@@ -13,7 +13,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { BookOpen, CheckCircle, Users, Grid3X3, Search, MoreHorizontal, Link, CalendarIcon, FileText, Video, Clock } from "lucide-react";
+import { BookOpen, CheckCircle, Users, Grid3X3, Search, MoreHorizontal, Edit, CalendarIcon, FileText, Video, Clock, Upload } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -75,11 +75,21 @@ export function TrainingManagement() {
   const [activeTab, setActiveTab] = useState("training-programs");
   const [isNewTrainingOpen, setIsNewTrainingOpen] = useState(false);
   const [isViewTrainingOpen, setIsViewTrainingOpen] = useState(false);
+  const [isEditTrainingOpen, setIsEditTrainingOpen] = useState(false);
   const [selectedTraining, setSelectedTraining] = useState<TrainingProgram | null>(null);
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
+  const [assignedDate, setAssignedDate] = useState<Date>();
   const [contentType, setContentType] = useState("document");
   const [mandatoryTraining, setMandatoryTraining] = useState(false);
+  const [editFormData, setEditFormData] = useState({
+    trainingTitle: "",
+    department: "",
+    trainer: "",
+    trainingType: "",
+    duration: "",
+    description: ""
+  });
   const [formData, setFormData] = useState({
     courseTitle: "",
     courseCode: "",
@@ -272,8 +282,24 @@ export function TrainingManagement() {
                           >
                             <MoreHorizontal className="w-4 h-4" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="w-8 h-8">
-                            <Link className="w-4 h-4" />
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="w-8 h-8"
+                            onClick={() => {
+                              setSelectedTraining(training);
+                              setEditFormData({
+                                trainingTitle: training.title,
+                                department: training.department,
+                                trainer: "",
+                                trainingType: "",
+                                duration: training.duration.replace('h', ''),
+                                description: ""
+                              });
+                              setIsEditTrainingOpen(true);
+                            }}
+                          >
+                            <Edit className="w-4 h-4" />
                           </Button>
                         </div>
                       </TableCell>
@@ -610,6 +636,173 @@ export function TrainingManagement() {
               </div>
             </>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Training Modal */}
+      <Dialog open={isEditTrainingOpen} onOpenChange={setIsEditTrainingOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader className="flex flex-row items-center justify-between space-y-0">
+            <div>
+              <DialogTitle className="text-xl font-semibold">Edit Training</DialogTitle>
+              <p className="text-sm text-muted-foreground mt-1">
+                Update the details below to edit the training course. All fields marked with * are required.
+              </p>
+            </div>
+          </DialogHeader>
+          
+          <div className="space-y-6 py-4">
+            {/* Training Title and Department */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="editTrainingTitle">Training Title*</Label>
+                <Input
+                  id="editTrainingTitle"
+                  placeholder="Enter training title"
+                  value={editFormData.trainingTitle}
+                  onChange={(e) => setEditFormData({...editFormData, trainingTitle: e.target.value})}
+                  className="bg-white"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="editDepartment">Department*</Label>
+                <Select value={editFormData.department} onValueChange={(value) => setEditFormData({...editFormData, department: value})}>
+                  <SelectTrigger className="bg-white">
+                    <SelectValue placeholder="Select department" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="marketing">Marketing</SelectItem>
+                    <SelectItem value="hr">HR</SelectItem>
+                    <SelectItem value="finance">Finance</SelectItem>
+                    <SelectItem value="it">IT</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Trainer and Training Type */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="editTrainer">Trainer*</Label>
+                <Select value={editFormData.trainer} onValueChange={(value) => setEditFormData({...editFormData, trainer: value})}>
+                  <SelectTrigger className="bg-white">
+                    <SelectValue placeholder="Select Trainer" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="trainer-1">Trainer 1</SelectItem>
+                    <SelectItem value="trainer-2">Trainer 2</SelectItem>
+                    <SelectItem value="trainer-3">Trainer 3</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="editTrainingType">Training type*</Label>
+                <Select value={editFormData.trainingType} onValueChange={(value) => setEditFormData({...editFormData, trainingType: value})}>
+                  <SelectTrigger className="bg-white">
+                    <SelectValue placeholder="Select Training type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="online">Online</SelectItem>
+                    <SelectItem value="in-person">In-person</SelectItem>
+                    <SelectItem value="hybrid">Hybrid</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Duration and Assigned Date */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="editDuration">Duration (Hours)*</Label>
+                <div className="relative">
+                  <Input
+                    id="editDuration"
+                    type="number"
+                    value={editFormData.duration}
+                    onChange={(e) => setEditFormData({...editFormData, duration: e.target.value})}
+                    className="bg-white pr-8"
+                  />
+                  <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex flex-col">
+                    <button type="button" className="text-xs text-muted-foreground">▲</button>
+                    <button type="button" className="text-xs text-muted-foreground">▼</button>
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Assigned date*</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal bg-white",
+                        !assignedDate && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {assignedDate ? format(assignedDate, "MM/dd/yyyy") : <span>Pick a Date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={assignedDate}
+                      onSelect={setAssignedDate}
+                      initialFocus
+                      className="p-3 pointer-events-auto"
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </div>
+
+            {/* Training Description / Content */}
+            <div className="space-y-2">
+              <Label htmlFor="editDescription">Training Description / Content *</Label>
+              <Textarea
+                id="editDescription"
+                placeholder="Enter detailed training description and title"
+                value={editFormData.description}
+                onChange={(e) => setEditFormData({...editFormData, description: e.target.value})}
+                className="bg-white min-h-[120px]"
+              />
+            </div>
+
+            {/* Select Documents and Upload Videos Buttons */}
+            <div className="flex gap-4">
+              <Button variant="outline" className="flex items-center gap-2">
+                <FileText className="w-4 h-4 text-emerald-600" />
+                Select Documents
+              </Button>
+              <Button variant="outline" className="flex items-center gap-2">
+                <Upload className="w-4 h-4 text-emerald-600" />
+                Upload videos
+              </Button>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-3 pt-4">
+              <Button
+                variant="outline"
+                onClick={() => setIsEditTrainingOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                onClick={() => {
+                  // Handle form submission here
+                  console.log('Updating training course:', {
+                    ...editFormData,
+                    assignedDate
+                  });
+                  setIsEditTrainingOpen(false);
+                }}
+              >
+                Update Training
+              </Button>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
